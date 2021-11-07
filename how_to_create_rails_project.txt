@@ -1,0 +1,43 @@
+templateディレクトリをコピー
+cd コピーしたdirectory
+docker-compose run --no-deps web rails new . --force --database=postgresql
+
+必要であれば、Gemfileを丁寧に変える。rails tutorial なら以下を変更
+  gem 'jquery-rails', '~> 4.3'
+  gem 'sqlite3', '~> 1.3'
+  gem 'rails-controller-testing', '~> 1.0'
+  gem 'minitest',                 '~> 5.10'
+  gem 'minitest-reporters',       '~> 1.1'
+  gem 'guard',                    '~> 2.16'
+  gem 'guard-minitest',           '~> 2.4'
+
+
+docker-compose build
+databaseファイルを以下のように書き換え
+
+```
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: db
+  username: postgres
+  password: password
+  pool: 5
+
+development:
+  <<: *default
+  database: myapp_development
+
+
+test:
+  <<: *default
+  database: myapp_test
+```
+
+docker-compose up -d
+docker-compose run web rake db:create
+
+
+
+
+https://docs.docker.com/samples/rails/
