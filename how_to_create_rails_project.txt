@@ -11,6 +11,9 @@ docker-compose run --no-deps web rails new . --force --database=postgresql
   gem 'guard',                    '~> 2.16'
   gem 'guard-minitest',           '~> 2.4'
 
+if [ $(cat /proc/version | grep Linux | wc -l) -eq 0 ]; then
+  sudo chown -R $USER:$USER .
+fi
 
 docker-compose build
 databaseファイルを以下のように書き換え

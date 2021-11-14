@@ -8,7 +8,8 @@ fi
 
 docker-compose build
 
-vim config/database.yml
+rm config/database.yml
+mv ./_template_database.yml config/database.yml
 
 docker-compose up -d
 docker-compose run web rake db:create
