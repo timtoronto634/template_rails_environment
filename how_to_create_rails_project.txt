@@ -10,6 +10,8 @@ docker-compose run --no-deps web rails new . --force --database=postgresql
   gem 'minitest-reporters',       '~> 1.1'
   gem 'guard',                    '~> 2.16'
   gem 'guard-minitest',           '~> 2.4'
+tzinfo というgemが邪魔なので消す。windows上で動かすために入っているライブラリ
+
 
 if [ $(cat /proc/version | grep Linux | wc -l) -eq 0 ]; then
   sudo chown -R $USER:$USER .
