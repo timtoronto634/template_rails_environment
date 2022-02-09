@@ -2,6 +2,7 @@ templateディレクトリをコピー
 cd コピーしたdirectory
 docker-compose run --no-deps web rails new . --force --database=postgresql
 
+gemfile からtzinfoを削除
 必要であれば、Gemfileを丁寧に変える。rails tutorial なら以下を変更
   gem 'jquery-rails', '~> 4.3'
   gem 'sqlite3', '~> 1.3'
