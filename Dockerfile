@@ -19,4 +19,4 @@ ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 3000
 
 # Start the main process.
-CMD ["rails", "server", "-b", "0.0.0.0"] 
+CMD ["bundle", "ex", "rails", "server", "-b", "0.0.0.0"] 

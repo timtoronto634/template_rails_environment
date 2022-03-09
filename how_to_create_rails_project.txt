@@ -1,6 +1,6 @@
 templateディレクトリをコピー
 cd コピーしたdirectory
-docker-compose run --no-deps web rails new . --force --database=postgresql
+docker-compose run --no-deps web bundle ex rails new . --force --database=postgresql
 
 gemfile からtzinfoを削除
 必要であれば、Gemfileを丁寧に変える。rails tutorial なら以下を変更
@@ -19,7 +19,7 @@ if [ $(cat /proc/version | grep Linux | wc -l) -eq 0 ]; then
 fi
 
 docker-compose build
-databaseファイルを以下のように書き換え
+databaseファイルを以下のように書き換え（をしない方がいいかも）
 
 ```
 default: &default
@@ -43,6 +43,7 @@ test:
 docker-compose up -d
 docker-compose run web rake db:create
 
+# docker-compose run --no-deps web bundle install
 
 
 
