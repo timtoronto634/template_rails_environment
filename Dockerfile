@@ -7,6 +7,11 @@ WORKDIR /myapp
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && apt-get install -y nodejs
 RUN npm install --global yarn
 
+ARG UID=1000
+RUN useradd -u ${UID} docker
+USER ${UID}
+WORKDIR /myapp
+
 COPY Gemfile /myapp/Gemfile
 COPY Gemfile.lock /myapp/Gemfile.lock
 RUN bundle install -j 4
