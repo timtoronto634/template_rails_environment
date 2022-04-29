@@ -27,7 +27,7 @@ WORKDIR $WORKSPACE
 
 RUN gem install bundler
 
-# bundle install.
+# bundle install
 COPY --chown=rails:rails Gemfile $WORKSPACE/Gemfile
 RUN bundle install
 EXPOSE  3000
