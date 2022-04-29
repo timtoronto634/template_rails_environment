@@ -1,27 +1,34 @@
 FROM ruby:2.7.4
+
+ENV LANG C.UTF-8
+ENV WORKSPACE=/usr/local/src
+
 RUN echo 'deb http://ftp.jp.debian.org/debian sid main ' >> /etc/apt/sources.list && \
-  apt-get update -qq && apt-get install -y postgresql-client
-WORKDIR /myapp
+  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+  echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-# install nodejs(LTS) and yarn
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && apt-get install -y nodejs
-RUN npm install --global yarn
+# install bundler.
+RUN apt-get update && \
+    apt-get install -y vim less && \
+    apt-get install -y build-essential libpq-dev yarn postgresql-client && \
+    apt-get clean && \
+    rm -r /var/lib/apt/lists/*
 
-ARG UID=1000
-RUN useradd -u ${UID} docker
-USER ${UID}
-WORKDIR /myapp
+# create user and group.
+RUN groupadd -r --gid 1000 rails && \
+    useradd -m -r --uid 1000 --gid 1000 rails
 
-COPY Gemfile /myapp/Gemfile
-COPY Gemfile.lock /myapp/Gemfile.lock
-RUN bundle install -j 4
-# COPY . /myapp
+# create directory.
+RUN mkdir -p $WORKSPACE && \
+    chown -R rails:rails $WORKSPACE
 
-# Add a script to be executed every time the container starts.
-COPY entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
-ENTRYPOINT ["entrypoint.sh"]
-EXPOSE 3000
+USER rails
+WORKDIR $WORKSPACE
 
-# Start the main process.
-CMD ["bundle", "ex", "rails", "server", "-b", "0.0.0.0"] 
+RUN gem install bundler
+
+# bundle install.
+COPY --chown=rails:rails Gemfile $WORKSPACE/Gemfile
+RUN bundle install
+EXPOSE  3000
+CMD ["rails", "server", "-b", "0.0.0.0"]
